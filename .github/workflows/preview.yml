@@ -1,0 +1,20 @@
+name: preview
+
+# A deliberately unsafe workflow, to show what Actions Guard reports.
+on:
+  pull_request_target:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: npm ci && npm run build
+      - run: echo "Building preview for ${{ github.event.pull_request.title }}"
+      - uses: some-org/deploy-preview@v2
